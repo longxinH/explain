@@ -104,7 +104,6 @@ static inline void explain_zend_op(zend_op_array *ops, znode_op *op, zend_ulong 
     switch (type) {
         case IS_CV : {
             add_assoc_str_ex(return_value_ptr, name, name_len, ops->vars[(op->var - sizeof(zend_execute_data)) / sizeof(zval)]);
-            //add_assoc_string_ex(return_value_ptr, name, name_len, (char *) ops->vars[op->var]->val);
             break;
         }
 
@@ -176,7 +175,6 @@ static inline void explain_op_array(zend_op_array *ops, zval *result) {
         zend_llist vars;
         zend_llist_init(&vars, sizeof(size_t), NULL, 0);
 
-        //zval result;
         array_init(result);
 
         do {
