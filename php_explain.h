@@ -1,8 +1,8 @@
 /*
   +----------------------------------------------------------------------+
-  | PHP Version 5                                                        |
+  | PHP Version 7                                                        |
   +----------------------------------------------------------------------+
-  | Copyright (c) 1997-2013 The PHP Group                                |
+  | Copyright (c) 1997-2015 The PHP Group                                |
   +----------------------------------------------------------------------+
   | This source file is subject to version 3.01 of the PHP license,      |
   | that is bundled with this package in the file LICENSE, and is        |
@@ -12,7 +12,7 @@
   | obtain it through the world-wide-web, please send a note to          |
   | license@php.net so we can mail you a copy immediately.               |
   +----------------------------------------------------------------------+
-  | Author: Joe Watkins <joe.watkins@live.co.uk>                         |
+  | Author:                                                              |
   +----------------------------------------------------------------------+
 */
 
@@ -24,8 +24,15 @@
 extern zend_module_entry explain_module_entry;
 #define phpext_explain_ptr &explain_module_entry
 
-#define PHP_EXPLAIN_VERSION "0.1.0"
-#define PHP_EXPLAIN_EXTNAME "explain"
+#define PHP_EXPLAIN_VERSION "0.1.0" /* Replace with version number for your extension */
+
+#ifdef PHP_WIN32
+#	define PHP_EXPLAIN_API __declspec(dllexport)
+#elif defined(__GNUC__) && __GNUC__ >= 4
+#	define PHP_EXPLAIN_API __attribute__ ((visibility("default")))
+#else
+#	define PHP_EXPLAIN_API
+#endif
 
 #ifdef ZTS
 #include "TSRM.h"
@@ -40,6 +47,10 @@ ZEND_END_MODULE_GLOBALS(explain)
 #define EX_G(v) TSRMG(explain_globals_id, zend_explain_globals *, v)
 #else
 #define EX_G(v) (explain_globals.v)
+#endif
+
+#if defined(ZTS) && defined(COMPILE_DL_EXPLAIN)
+ZEND_TSRMLS_CACHE_EXTERN();
 #endif
 
 #endif	/* PHP_EXPLAIN_H */
