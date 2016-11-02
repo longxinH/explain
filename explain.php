@@ -1,4 +1,5 @@
 <?php
+
 $input = @$argv[1];
 $lastline = 1;
 $classes = array();
@@ -42,7 +43,6 @@ $table = function($id, &$explained, &$lines) {
     </thead>
     <tbody>
     <?php foreach ($explained as $num => $opline): ?>
-    <?php if (@$opline["lineno"] != @$explained[$num+1]["lineno"]): ?>
     <?php   if (@$lines[$opline["lineno"]-1]): ?>
     <tr>
       <td class="code">#<?=$opline["lineno"] ?></td>
@@ -58,7 +58,6 @@ $table = function($id, &$explained, &$lines) {
       </pre>
       </td>
     </tr>
-    <?php endif; ?>
     <?php endif; ?>
     <tr>
         <td>&nbsp;</td>
@@ -89,7 +88,7 @@ $table = function($id, &$explained, &$lines) {
 if (is_dir($input)) {
   foreach ($scanpath($input) as $file) {
     $name = substr($file, strlen($input));
-    
+    $classes[$name] = $functions[$name] = '';
     $explained[$name] = explain(
       $file, EXPLAIN_FILE, $classes[$name], $functions[$name]);
       foreach (preg_split("~(\n)~", file_get_contents($file)) as $line) {
@@ -105,6 +104,7 @@ if (is_dir($input)) {
         $lines[$input][] = gzcompress($line);
       } else $lines[$input][] = $line;
     }
+    $classes[$input] = $functions[$input] = '';
     $explained[$input] = explain(
       $input, EXPLAIN_FILE, $classes[$input], $functions[$input]);
   } else $explained = false;
